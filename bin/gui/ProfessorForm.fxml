@@ -23,7 +23,6 @@
           <RowConstraints maxHeight="57.600016021728514" minHeight="10.0" prefHeight="30.39997558593749" vgrow="SOMETIMES" />
           <RowConstraints maxHeight="32.00001220703125" minHeight="3.199983978271476" prefHeight="26.399993896484375" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="32.00000610351562" minHeight="10.0" prefHeight="29.600018310546872" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="31.99997558593749" minHeight="10.0" prefHeight="29.599981689453116" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="26.39999999999999" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="26.39999999999999" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
@@ -32,19 +31,18 @@
             <Label text="NOME" GridPane.rowIndex="1" />
             <Label text="CPF" GridPane.rowIndex="2" />
             <Label text="EMAIL" GridPane.rowIndex="3" />
-            <Label text="SIAEP" GridPane.rowIndex="5" />
+            <Label text="SIAEP" GridPane.rowIndex="4" />
             <TextField fx:id="txtId" editable="false" prefHeight="26.0" prefWidth="222.0" GridPane.columnIndex="1" />
             <TextField fx:id="txtNome" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextField fx:id="txtCpf" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <TextField fx:id="txtEmail" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <TextField fx:id="txtSiaep" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <TextField fx:id="txtSiaep" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <Label fx:id="labelErrorName" textFill="#ea0b0b" GridPane.columnIndex="2" />
             <Label textFill="#fa0d0d" GridPane.columnIndex="2" GridPane.rowIndex="1" />
             <Label textFill="#fc0707" GridPane.columnIndex="2" GridPane.rowIndex="2" />
             <Label textFill="#ef2a07" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-            <Label textFill="#f41111" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-            <Label textFill="#f40707" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-            <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+            <Label textFill="#f40707" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+            <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
                <children>
                   <Button fx:id="btSave" mnemonicParsing="false" onAction="#onBtSaveAction" text="Salvar" />
                   <Button fx:id="btCancel" mnemonicParsing="false" onAction="#onBtCancelAction" text="Cancelar">

@@ -29,47 +29,45 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import model.entities.Professor;
-import model.services.ProfessorService;
+import model.entities.Disciplina;
+import model.services.DisciplinaService;
 
-public class ProfessorListController implements Initializable, DataChangeListener {
+public class DisciplinaListController implements Initializable, DataChangeListener {
 
-	private ProfessorService service;
-
-	@FXML
-	private TableView<Professor> tableViewProfessor;
-	@FXML
-	private TableColumn<Professor, Integer> tableColumnId;
-	@FXML
-	private TableColumn<Professor, String> tableColumnNome;
-	@FXML
-	private TableColumn<Professor, String> tableColumnCpf;
-	@FXML
-	private TableColumn<Professor, String> tableColumnEmail;
-	@FXML
-	private TableColumn<Professor, Integer> tableColumnNumero;
-	@FXML
-	private TableColumn<Professor, Integer> tableColumnSiaep;
+	private DisciplinaService service;
 
 	@FXML
-	private TableColumn<Professor, Professor> tableColumnEDIT;
+	private TableView<Disciplina> tableViewDisciplina;
+	@FXML
+	private TableColumn<Disciplina, Integer> tableColumnId;
+	@FXML
+	private TableColumn<Disciplina, String> tableColumnNome;
+	@FXML
+	private TableColumn<Disciplina, String> tableColumnProfessor;
+	@FXML
+	private TableColumn<Disciplina, String> tableColumnCurso;
+	@FXML
+	private TableColumn<Disciplina, Integer> tableColumnVagas;
 
 	@FXML
-	private TableColumn<Professor, Professor> tableColumnREMOVE;
+	private TableColumn<Disciplina, Disciplina> tableColumnEDIT;
+
+	@FXML
+	private TableColumn<Disciplina, Disciplina> tableColumnREMOVE;
 
 	@FXML
 	private Button btNovo;
 
-	private ObservableList<Professor> obsList;
+	private ObservableList<Disciplina> obsList;
 
 	@FXML
 	public void onBtNovoAction(ActionEvent event) {
 		Stage parentStage = Utils.currentStage(event);
-		Professor obj = new Professor();
-		createDialogForm(obj, "/gui/ProfessorForm.fxml", parentStage);
+		Disciplina obj = new Disciplina();
+		createDialogForm(obj, "/gui/DisciplinaForm.fxml", parentStage);
 	}
 
-	public void setProfessorService(ProfessorService service) {
+	public void setDisciplinaService(DisciplinaService service) {
 		this.service = service;
 	}
 
@@ -83,37 +81,37 @@ public class ProfessorListController implements Initializable, DataChangeListene
 	private void initializeNodes() {
 		tableColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
 		tableColumnNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
-		tableColumnCpf.setCellValueFactory(new PropertyValueFactory<>("cpf"));
-		tableColumnEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
-		tableColumnSiaep.setCellValueFactory(new PropertyValueFactory<>("siaep"));
+		tableColumnProfessor.setCellValueFactory(new PropertyValueFactory<>("professor"));
+		tableColumnCurso.setCellValueFactory(new PropertyValueFactory<>("curso"));
+		tableColumnVagas.setCellValueFactory(new PropertyValueFactory<>("vagas"));
 		Stage stage = (Stage) Main.getMainScene().getWindow();
-		tableViewProfessor.prefHeightProperty().bind(stage.heightProperty());
+		tableViewDisciplina.prefHeightProperty().bind(stage.heightProperty());
 	}
 
 	public void updateTableView() {
 		if (service == null) {
 			throw new IllegalStateException("Service was null");
 		}
-		List<Professor> list = service.findAll();
+		List<Disciplina> list = service.findAll();
 		obsList = FXCollections.observableArrayList(list);
-		tableViewProfessor.setItems(obsList);
+		tableViewDisciplina.setItems(obsList);
 		initEditButtons();
 		initRemoveButtons();
 	}
 
-	private void createDialogForm(Professor obj, String absoluteName, Stage parentStage) {
+	private void createDialogForm(Disciplina obj, String absoluteName, Stage parentStage) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
 			Pane pane = loader.load();
 
-			ProfessorFormController controller = loader.getController();
-			controller.setProfessor(obj);
-			controller.setProfessorService(new ProfessorService());
+			DisciplinaFormController controller = loader.getController();
+			controller.setDisciplina(obj);
+			controller.setDisciplinaService(new DisciplinaService());
 			controller.subscribDataChangeListener(this);
 			controller.updateFormData();
 
 			Stage dialogStage = new Stage();
-			dialogStage.setTitle("Entre com os dados do professor");
+			dialogStage.setTitle("Entre com os dados do Disciplina");
 			dialogStage.setScene(new Scene(pane));
 			dialogStage.setResizable(false);
 			dialogStage.initOwner(parentStage);
@@ -132,11 +130,11 @@ public class ProfessorListController implements Initializable, DataChangeListene
 
 	private void initEditButtons() {
 		tableColumnEDIT.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
-		tableColumnEDIT.setCellFactory(param -> new TableCell<Professor, Professor>() {
+		tableColumnEDIT.setCellFactory(param -> new TableCell<Disciplina, Disciplina>() {
 			private final Button button = new Button("editar");
 
 			@Override
-			protected void updateItem(Professor obj, boolean empty) {
+			protected void updateItem(Disciplina obj, boolean empty) {
 				super.updateItem(obj, empty);
 				if (obj == null) {
 					setGraphic(null);
@@ -144,18 +142,18 @@ public class ProfessorListController implements Initializable, DataChangeListene
 				}
 				setGraphic(button);
 				button.setOnAction(
-						event -> createDialogForm(obj, "/gui/ProfessorForm.fxml", Utils.currentStage(event)));
+						event -> createDialogForm(obj, "/gui/DisciplinaForm.fxml", Utils.currentStage(event)));
 			}
 		});
 	}
 
 	private void initRemoveButtons() {
 		tableColumnREMOVE.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
-		tableColumnREMOVE.setCellFactory(param -> new TableCell<Professor, Professor>() {
+		tableColumnREMOVE.setCellFactory(param -> new TableCell<Disciplina, Disciplina>() {
 			private final Button button = new Button("remover");
 
 			@Override
-			protected void updateItem(Professor obj, boolean empty) {
+			protected void updateItem(Disciplina obj, boolean empty) {
 				super.updateItem(obj, empty);
 				if (obj == null) {
 					setGraphic(null);
@@ -167,7 +165,7 @@ public class ProfessorListController implements Initializable, DataChangeListene
 		});
 	}
 
-	private void removeEntity(Professor obj) {
+	private void removeEntity(Disciplina obj) {
 		Optional<ButtonType> result = Alerts.showConfirmation("confirmar", "Tem certeza?");
 		
 		if(result.get()== ButtonType.OK){ {

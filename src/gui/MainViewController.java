@@ -16,6 +16,9 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
+import model.services.AlunoService;
+import model.services.CoordenadorService;
+import model.services.DisciplinaService;
 import model.services.ProfessorService;
 
 public class MainViewController implements Initializable {
@@ -39,15 +42,24 @@ public class MainViewController implements Initializable {
     }
     @FXML
     public void onMenuItemAlunoAction() {
-        System.out.println("onMenuItemAlunoAction");
+    	loadView("/gui/AlunoList.fxml", (AlunoListController controller )->{
+    		controller.setAlunoService(new AlunoService());
+            controller.updateTableView();
+    	});
     }
     @FXML
     public void onMenuItemCoordenadorAction() {
-        System.out.println("onMenuItemCoordenadorAction");
+    	loadView("/gui/CoordenadorList.fxml", (CoordenadorListController controller )->{
+    		controller.setCoordenadorService(new CoordenadorService());
+            controller.updateTableView();
+    	});
     }
     @FXML
     public void onMenuItemDisciplinaAction() {
-        System.out.println("onMenuItemDisciplinaAction");
+    	loadView("/gui/DisciplinaList.fxml", (DisciplinaListController controller )->{
+    		controller.setDisciplinaService(new DisciplinaService());
+            controller.updateTableView();
+    	});
     }
     @FXML
     public void onMenuItemAboutAction() {

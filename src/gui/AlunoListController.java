@@ -29,47 +29,47 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import model.entities.Professor;
-import model.services.ProfessorService;
+import model.entities.Aluno;
+import model.services.AlunoService;
 
-public class ProfessorListController implements Initializable, DataChangeListener {
+public class AlunoListController implements Initializable, DataChangeListener {
 
-	private ProfessorService service;
-
-	@FXML
-	private TableView<Professor> tableViewProfessor;
-	@FXML
-	private TableColumn<Professor, Integer> tableColumnId;
-	@FXML
-	private TableColumn<Professor, String> tableColumnNome;
-	@FXML
-	private TableColumn<Professor, String> tableColumnCpf;
-	@FXML
-	private TableColumn<Professor, String> tableColumnEmail;
-	@FXML
-	private TableColumn<Professor, Integer> tableColumnNumero;
-	@FXML
-	private TableColumn<Professor, Integer> tableColumnSiaep;
+	private AlunoService service;
 
 	@FXML
-	private TableColumn<Professor, Professor> tableColumnEDIT;
+	private TableView<Aluno> tableViewAluno;
+	@FXML
+	private TableColumn<Aluno, Integer> tableColumnId;
+	@FXML
+	private TableColumn<Aluno, String> tableColumnNome;
+	@FXML
+	private TableColumn<Aluno, String> tableColumnCpf;
+	@FXML
+	private TableColumn<Aluno, String> tableColumnEmail;
+	@FXML
+	private TableColumn<Aluno, Integer> tableColumnNumero;
+	@FXML
+	private TableColumn<Aluno, Integer> tableColumnMatricula;
 
 	@FXML
-	private TableColumn<Professor, Professor> tableColumnREMOVE;
+	private TableColumn<Aluno, Aluno> tableColumnEDIT;
+
+	@FXML
+	private TableColumn<Aluno, Aluno> tableColumnREMOVE;
 
 	@FXML
 	private Button btNovo;
 
-	private ObservableList<Professor> obsList;
+	private ObservableList<Aluno> obsList;
 
 	@FXML
 	public void onBtNovoAction(ActionEvent event) {
 		Stage parentStage = Utils.currentStage(event);
-		Professor obj = new Professor();
-		createDialogForm(obj, "/gui/ProfessorForm.fxml", parentStage);
+		Aluno obj = new Aluno();
+		createDialogForm(obj, "/gui/AlunoForm.fxml", parentStage);
 	}
 
-	public void setProfessorService(ProfessorService service) {
+	public void setAlunoService(AlunoService service) {
 		this.service = service;
 	}
 
@@ -85,35 +85,35 @@ public class ProfessorListController implements Initializable, DataChangeListene
 		tableColumnNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
 		tableColumnCpf.setCellValueFactory(new PropertyValueFactory<>("cpf"));
 		tableColumnEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
-		tableColumnSiaep.setCellValueFactory(new PropertyValueFactory<>("siaep"));
+		tableColumnMatricula.setCellValueFactory(new PropertyValueFactory<>("Matricula"));
 		Stage stage = (Stage) Main.getMainScene().getWindow();
-		tableViewProfessor.prefHeightProperty().bind(stage.heightProperty());
+		tableViewAluno.prefHeightProperty().bind(stage.heightProperty());
 	}
 
 	public void updateTableView() {
 		if (service == null) {
 			throw new IllegalStateException("Service was null");
 		}
-		List<Professor> list = service.findAll();
+		List<Aluno> list = service.findAll();
 		obsList = FXCollections.observableArrayList(list);
-		tableViewProfessor.setItems(obsList);
+		tableViewAluno.setItems(obsList);
 		initEditButtons();
 		initRemoveButtons();
 	}
 
-	private void createDialogForm(Professor obj, String absoluteName, Stage parentStage) {
+	private void createDialogForm(Aluno obj, String absoluteName, Stage parentStage) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
 			Pane pane = loader.load();
 
-			ProfessorFormController controller = loader.getController();
-			controller.setProfessor(obj);
-			controller.setProfessorService(new ProfessorService());
+			AlunoFormController controller = loader.getController();
+			controller.setAluno(obj);
+			controller.setAlunoService(new AlunoService());
 			controller.subscribDataChangeListener(this);
 			controller.updateFormData();
 
 			Stage dialogStage = new Stage();
-			dialogStage.setTitle("Entre com os dados do professor");
+			dialogStage.setTitle("Entre com os dados do Aluno");
 			dialogStage.setScene(new Scene(pane));
 			dialogStage.setResizable(false);
 			dialogStage.initOwner(parentStage);
@@ -132,11 +132,11 @@ public class ProfessorListController implements Initializable, DataChangeListene
 
 	private void initEditButtons() {
 		tableColumnEDIT.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
-		tableColumnEDIT.setCellFactory(param -> new TableCell<Professor, Professor>() {
+		tableColumnEDIT.setCellFactory(param -> new TableCell<Aluno, Aluno>() {
 			private final Button button = new Button("editar");
 
 			@Override
-			protected void updateItem(Professor obj, boolean empty) {
+			protected void updateItem(Aluno obj, boolean empty) {
 				super.updateItem(obj, empty);
 				if (obj == null) {
 					setGraphic(null);
@@ -144,18 +144,18 @@ public class ProfessorListController implements Initializable, DataChangeListene
 				}
 				setGraphic(button);
 				button.setOnAction(
-						event -> createDialogForm(obj, "/gui/ProfessorForm.fxml", Utils.currentStage(event)));
+						event -> createDialogForm(obj, "/gui/AlunoForm.fxml", Utils.currentStage(event)));
 			}
 		});
 	}
 
 	private void initRemoveButtons() {
 		tableColumnREMOVE.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
-		tableColumnREMOVE.setCellFactory(param -> new TableCell<Professor, Professor>() {
+		tableColumnREMOVE.setCellFactory(param -> new TableCell<Aluno, Aluno>() {
 			private final Button button = new Button("remover");
 
 			@Override
-			protected void updateItem(Professor obj, boolean empty) {
+			protected void updateItem(Aluno obj, boolean empty) {
 				super.updateItem(obj, empty);
 				if (obj == null) {
 					setGraphic(null);
@@ -167,7 +167,7 @@ public class ProfessorListController implements Initializable, DataChangeListene
 		});
 	}
 
-	private void removeEntity(Professor obj) {
+	private void removeEntity(Aluno obj) {
 		Optional<ButtonType> result = Alerts.showConfirmation("confirmar", "Tem certeza?");
 		
 		if(result.get()== ButtonType.OK){ {

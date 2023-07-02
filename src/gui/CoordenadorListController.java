@@ -29,47 +29,45 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import model.entities.Professor;
-import model.services.ProfessorService;
+import model.entities.Coordenador;
+import model.services.CoordenadorService;
 
-public class ProfessorListController implements Initializable, DataChangeListener {
+public class CoordenadorListController implements Initializable, DataChangeListener {
 
-	private ProfessorService service;
-
-	@FXML
-	private TableView<Professor> tableViewProfessor;
-	@FXML
-	private TableColumn<Professor, Integer> tableColumnId;
-	@FXML
-	private TableColumn<Professor, String> tableColumnNome;
-	@FXML
-	private TableColumn<Professor, String> tableColumnCpf;
-	@FXML
-	private TableColumn<Professor, String> tableColumnEmail;
-	@FXML
-	private TableColumn<Professor, Integer> tableColumnNumero;
-	@FXML
-	private TableColumn<Professor, Integer> tableColumnSiaep;
+	private CoordenadorService service;
 
 	@FXML
-	private TableColumn<Professor, Professor> tableColumnEDIT;
+	private TableView<Coordenador> tableViewCoordenador;
+	@FXML
+	private TableColumn<Coordenador, Integer> tableColumnId;
+	@FXML
+	private TableColumn<Coordenador, String> tableColumnNome;
+	@FXML
+	private TableColumn<Coordenador, String> tableColumnCpf;
+	@FXML
+	private TableColumn<Coordenador, String> tableColumnEmail;
+	@FXML
+	private TableColumn<Coordenador, String> tableColumnDepartamento;
 
 	@FXML
-	private TableColumn<Professor, Professor> tableColumnREMOVE;
+	private TableColumn<Coordenador, Coordenador> tableColumnEDIT;
+
+	@FXML
+	private TableColumn<Coordenador, Coordenador> tableColumnREMOVE;
 
 	@FXML
 	private Button btNovo;
 
-	private ObservableList<Professor> obsList;
+	private ObservableList<Coordenador> obsList;
 
 	@FXML
 	public void onBtNovoAction(ActionEvent event) {
 		Stage parentStage = Utils.currentStage(event);
-		Professor obj = new Professor();
-		createDialogForm(obj, "/gui/ProfessorForm.fxml", parentStage);
+		Coordenador obj = new Coordenador();
+		createDialogForm(obj, "/gui/CoordenadorForm.fxml", parentStage);
 	}
 
-	public void setProfessorService(ProfessorService service) {
+	public void setCoordenadorService(CoordenadorService service) {
 		this.service = service;
 	}
 
@@ -85,35 +83,35 @@ public class ProfessorListController implements Initializable, DataChangeListene
 		tableColumnNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
 		tableColumnCpf.setCellValueFactory(new PropertyValueFactory<>("cpf"));
 		tableColumnEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
-		tableColumnSiaep.setCellValueFactory(new PropertyValueFactory<>("siaep"));
+		tableColumnDepartamento.setCellValueFactory(new PropertyValueFactory<>("departamento"));
 		Stage stage = (Stage) Main.getMainScene().getWindow();
-		tableViewProfessor.prefHeightProperty().bind(stage.heightProperty());
+		tableViewCoordenador.prefHeightProperty().bind(stage.heightProperty());
 	}
 
 	public void updateTableView() {
 		if (service == null) {
 			throw new IllegalStateException("Service was null");
 		}
-		List<Professor> list = service.findAll();
+		List<Coordenador> list = service.findAll();
 		obsList = FXCollections.observableArrayList(list);
-		tableViewProfessor.setItems(obsList);
+		tableViewCoordenador.setItems(obsList);
 		initEditButtons();
 		initRemoveButtons();
 	}
 
-	private void createDialogForm(Professor obj, String absoluteName, Stage parentStage) {
+	private void createDialogForm(Coordenador obj, String absoluteName, Stage parentStage) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
 			Pane pane = loader.load();
 
-			ProfessorFormController controller = loader.getController();
-			controller.setProfessor(obj);
-			controller.setProfessorService(new ProfessorService());
+			CoordenadorFormController controller = loader.getController();
+			controller.setCoordenador(obj);
+			controller.setCoordenadorService(new CoordenadorService());
 			controller.subscribDataChangeListener(this);
 			controller.updateFormData();
 
 			Stage dialogStage = new Stage();
-			dialogStage.setTitle("Entre com os dados do professor");
+			dialogStage.setTitle("Entre com os dados do Coordenador");
 			dialogStage.setScene(new Scene(pane));
 			dialogStage.setResizable(false);
 			dialogStage.initOwner(parentStage);
@@ -132,11 +130,11 @@ public class ProfessorListController implements Initializable, DataChangeListene
 
 	private void initEditButtons() {
 		tableColumnEDIT.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
-		tableColumnEDIT.setCellFactory(param -> new TableCell<Professor, Professor>() {
+		tableColumnEDIT.setCellFactory(param -> new TableCell<Coordenador, Coordenador>() {
 			private final Button button = new Button("editar");
 
 			@Override
-			protected void updateItem(Professor obj, boolean empty) {
+			protected void updateItem(Coordenador obj, boolean empty) {
 				super.updateItem(obj, empty);
 				if (obj == null) {
 					setGraphic(null);
@@ -144,18 +142,18 @@ public class ProfessorListController implements Initializable, DataChangeListene
 				}
 				setGraphic(button);
 				button.setOnAction(
-						event -> createDialogForm(obj, "/gui/ProfessorForm.fxml", Utils.currentStage(event)));
+						event -> createDialogForm(obj, "/gui/CoordenadorForm.fxml", Utils.currentStage(event)));
 			}
 		});
 	}
 
 	private void initRemoveButtons() {
 		tableColumnREMOVE.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
-		tableColumnREMOVE.setCellFactory(param -> new TableCell<Professor, Professor>() {
+		tableColumnREMOVE.setCellFactory(param -> new TableCell<Coordenador, Coordenador>() {
 			private final Button button = new Button("remover");
 
 			@Override
-			protected void updateItem(Professor obj, boolean empty) {
+			protected void updateItem(Coordenador obj, boolean empty) {
 				super.updateItem(obj, empty);
 				if (obj == null) {
 					setGraphic(null);
@@ -167,7 +165,7 @@ public class ProfessorListController implements Initializable, DataChangeListene
 		});
 	}
 
-	private void removeEntity(Professor obj) {
+	private void removeEntity(Coordenador obj) {
 		Optional<ButtonType> result = Alerts.showConfirmation("confirmar", "Tem certeza?");
 		
 		if(result.get()== ButtonType.OK){ {
